@@ -122,6 +122,7 @@ function renderEntries() {
       typeIndicator.className = `type-indicator ${e.type}`;
       div.appendChild(typeIndicator);
 
+      // 日付表示（右上）
       const dateLabel = document.createElement("div");
       dateLabel.className = "date-label";
       const formattedDate = new Date(e.date).toLocaleDateString('ja-JP', {
@@ -132,13 +133,14 @@ function renderEntries() {
       dateLabel.textContent = `${formattedDate}`;
       div.appendChild(dateLabel);
 
-      const typeLabel = document.createElement("div");
-      typeLabel.className = "type-label";
-      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'へ贈った' : 'からもらった'}`;
-      div.appendChild(typeLabel);
-
       const contentDiv = document.createElement("div");
       contentDiv.className = "content";
+
+      // パートナー名・タイプ情報表示（タイトルの上）
+      const typeLabel = document.createElement("div");
+      typeLabel.className = "type-label";
+      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'に贈った' : 'にもらった'}`;
+      contentDiv.appendChild(typeLabel);
 
       const titleSpan = document.createElement("span");
       titleSpan.className = "title";
