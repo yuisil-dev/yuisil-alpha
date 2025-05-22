@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ユイシル α - 使い方</title>
   <style>
     :root {
@@ -15,7 +15,6 @@
 
     * {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -37,8 +36,7 @@
     }
 
     header img {
-      height: 100px;
-      width: 100px;
+      height: 80px;
       margin-bottom: 0.5rem;
       border-radius: 50%;
       object-fit: cover;
@@ -53,6 +51,7 @@
     .container {
       max-width: 800px;
       margin: 0 auto;
+      padding: 1rem;
     }
 
     .section {
@@ -70,20 +69,13 @@
       padding-bottom: 0.5rem;
     }
 
-    .step {
-      margin-bottom: 2rem;
+    .feature {
+      margin-bottom: 1.5rem;
     }
 
-    .step h3 {
+    .feature h3 {
       color: var(--secondary-color);
       margin-bottom: 0.5rem;
-    }
-
-    .step img {
-      max-width: 100%;
-      border-radius: 8px;
-      margin: 1rem 0;
-      box-shadow: var(--shadow);
     }
 
     .note {
@@ -91,11 +83,6 @@
       padding: 1rem;
       border-radius: 8px;
       margin: 1rem 0;
-    }
-
-    .note h4 {
-      margin: 0 0 0.5rem 0;
-      color: #e65100;
     }
 
     .back-link {
@@ -109,84 +96,82 @@
       text-decoration: underline;
     }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 0.5rem;
-      }
+    .example {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+    }
+
+    .example-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
+  <header>
+    <img src="../yuisil_logo.png" alt="ユイシル ロゴ">
+    <h1>ユイシル α - 使い方</h1>
+  </header>
+
   <div class="container">
-    <header>
-      <img src="../yuisil_logo.png" alt="ユイシル ロゴ">
-      <h1>ユイシル α - 使い方</h1>
-    </header>
-
     <div class="section">
-      <h2>基本機能</h2>
-      <p>ユイシルは、贈り物の記録を通して、人とのつながりや感謝の気持ちを可視化するサービスです。</p>
-      <p>以下の機能が利用できます：</p>
-      <ul>
-        <li>贈り物の送受記録</li>
-        <li>相手別の一覧表示</li>
-        <li>時系列での表示</li>
-        <li>記録の編集・削除</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>使い方</h2>
-      
-      <div class="step">
-        <h3>1. 記録の追加</h3>
-        <p>トップページの「贈った」または「もらった」ボタンをタップして、新しい記録を追加できます。</p>
-        <div class="note">
-          <h4>入力項目</h4>
+      <h2>基本的な使い方</h2>
+      <div class="feature">
+        <h3>記録の追加</h3>
+        <p>「贈った」または「もらった」ボタンをクリックして、新しい記録を追加できます。</p>
+        <div class="example">
+          <div class="example-title">入力項目：</div>
           <ul>
-            <li>相手の名前（必須）</li>
-            <li>日付（必須）</li>
-            <li>内容（必須）</li>
+            <li>相手の名前</li>
+            <li>品名やカテゴリ（例：誕生日プレゼント、お土産など）</li>
+            <li>日付</li>
+            <li>詳細なメモ（贈り物の内容や思い出など）</li>
           </ul>
         </div>
       </div>
 
-      <div class="step">
-        <h3>2. 記録の確認</h3>
-        <p>追加した記録は、トップページの一覧に表示されます。</p>
+      <div class="feature">
+        <h3>関連する贈り物の設定</h3>
+        <p>相手の名前を入力すると、その相手との過去の記録が表示されます。関連付けたい記録を選択することで、贈り物の関係性を記録できます。</p>
+        <div class="note">
+          <strong>注意：</strong> 贈った記録にはもらった記録を、もらった記録には贈った記録のみを関連付けることができます。
+        </div>
+      </div>
+
+      <div class="feature">
+        <h3>記録の管理</h3>
+        <p>各記録には以下の情報が表示されます：</p>
         <ul>
-          <li>贈った記録はオレンジ色のインジケーターで表示</li>
-          <li>もらった記録は水色のインジケーターで表示</li>
-          <li>日付の新しい順に表示</li>
+          <li>右上：相手との関係（例：「山田さん に贈った」）</li>
+          <li>品名やカテゴリ</li>
+          <li>日付</li>
+          <li>詳細なメモ</li>
+          <li>関連する贈り物（設定した場合）</li>
         </ul>
       </div>
+    </div>
 
-      <div class="step">
-        <h3>3. 相手別の絞り込み</h3>
-        <p>検索ボックスに相手の名前を入力すると、該当する記録のみを表示できます。</p>
+    <div class="section">
+      <h2>便利な機能</h2>
+      <div class="feature">
+        <h3>相手別の絞り込み</h3>
+        <p>画面上部の検索ボックスに相手の名前を入力すると、その相手との記録のみを表示できます。</p>
       </div>
 
-      <div class="step">
-        <h3>4. 記録の編集・削除</h3>
-        <p>各記録の「編集」または「削除」ボタンから、記録の修正や削除ができます。</p>
+      <div class="feature">
+        <h3>記録の編集と削除</h3>
+        <p>各記録の「編集」ボタンで内容を修正したり、「削除」ボタンで記録を削除したりできます。</p>
         <div class="note">
-          <h4>注意</h4>
-          <p>削除した記録は復元できません。削除前に内容を確認してください。</p>
+          <strong>注意：</strong> 記録を削除すると、関連付けも解除されます。
         </div>
       </div>
     </div>
 
     <div class="section">
-      <h2>データの保存について</h2>
-      <p>ユイシルα版では、データはブラウザのローカルストレージに保存されます。</p>
-      <div class="note">
-        <h4>注意事項</h4>
-        <ul>
-          <li>ブラウザのデータを削除すると、記録も消去されます</li>
-          <li>別のブラウザやデバイスでは記録を共有できません</li>
-          <li>プライベートブラウジングモードでは記録が保存されません</li>
-        </ul>
-      </div>
+      <h2>データの保存</h2>
+      <p>すべてのデータはブラウザのローカルストレージに保存されます。ブラウザのデータを削除すると記録も消えてしまうのでご注意ください。</p>
     </div>
 
     <a href="../index.html" class="back-link">← トップページに戻る</a>
