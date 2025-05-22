@@ -124,7 +124,12 @@ function renderEntries() {
 
       const dateLabel = document.createElement("div");
       dateLabel.className = "date-label";
-      dateLabel.textContent = `${e.date}`;
+      const formattedDate = new Date(e.date).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      dateLabel.textContent = `${formattedDate}`;
       div.appendChild(dateLabel);
 
       const typeLabel = document.createElement("div");
