@@ -321,6 +321,7 @@ button#receivedBtn {
   height: 8px;
   border-radius: 50%;
   margin-right: 0.5rem;
+  flex-shrink: 0;
 }
 
 .related-gift-item .type-indicator.sent {
@@ -334,6 +335,17 @@ button#receivedBtn {
 .related-gift-item .content {
   flex: 1;
   font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.related-gift-item .date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
 }
 
 /* Filter */
