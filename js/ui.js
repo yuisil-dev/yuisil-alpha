@@ -172,7 +172,7 @@ function renderEntries() {
       // パートナー名・タイプ情報表示（タイトルの上）
       const typeLabel = document.createElement("div");
       typeLabel.className = "type-label";
-      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'に贈った' : 'に受け取った'}`;
+      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'へ贈った' : 'から受け取った'}`;
       contentDiv.appendChild(typeLabel);
 
       const titleSpan = document.createElement("span");
