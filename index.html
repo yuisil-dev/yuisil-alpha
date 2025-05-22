@@ -85,6 +85,23 @@
       box-shadow: var(--shadow);
     }
 
+    #formArea.received-mode button {
+      background-color: var(--secondary-color);
+    }
+
+    #formArea.received-mode input:focus, 
+    #formArea.received-mode textarea:focus {
+      border-color: var(--secondary-color);
+    }
+
+    .entry.received {
+      border-left: 4px solid var(--secondary-color);
+    }
+
+    .entry.sent {
+      border-left: 4px solid var(--primary-color);
+    }
+
     .related-gifts {
       margin: 1rem 0;
       padding: 1rem;
@@ -119,8 +136,13 @@
       background: #e9ecef;
     }
 
-    .related-gift-item.selected {
+    .related-gift-item.selected.sent {
       background: var(--primary-color);
+      color: white;
+    }
+
+    .related-gift-item.selected.received {
+      background: var(--secondary-color);
       color: white;
     }
 
@@ -149,20 +171,36 @@
       opacity: 0.7;
     }
 
-    input, textarea {
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .form-group input,
+    .form-group textarea {
       width: 100%;
       padding: 0.75rem;
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
       border: 2px solid #eee;
       border-radius: 8px;
       font-size: 1rem;
       transition: border-color 0.2s;
     }
 
-    input:focus, textarea:focus {
+    .form-group input:focus,
+    .form-group textarea:focus {
       outline: none;
       border-color: var(--primary-color);
+    }
+
+    #formArea.received-mode .form-group input:focus,
+    #formArea.received-mode .form-group textarea:focus {
+      border-color: var(--secondary-color);
     }
 
     .entry {
@@ -202,11 +240,7 @@
 
     .entry .content {
       flex: 1;
-    }
-
-    .entry .content span {
-      display: block;
-      margin-bottom: 0.5rem;
+      min-width: 0;
     }
 
     .entry .content .title {
@@ -214,6 +248,7 @@
       font-size: 1.1rem;
       margin-bottom: 0.75rem;
       color: var(--text-color);
+      display: block;
     }
 
     .entry .content .partner {
@@ -226,12 +261,19 @@
       font-size: 0.9rem;
       color: var(--text-color);
       opacity: 0.7;
+      display: block;
+      margin-bottom: 0.75rem;
     }
 
     .entry .content .description {
       margin-top: 0.5rem;
       font-size: 0.95rem;
       color: var(--text-color);
+      word-break: break-word;
+      max-height: 200px;
+      overflow-y: auto;
+      display: block;
+      white-space: pre-wrap;
     }
 
     .entry .actions {
@@ -240,6 +282,10 @@
       margin-top: 1rem;
       padding-top: 1rem;
       border-top: 1px solid #eee;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      z-index: 1;
     }
 
     .entry .actions button {
@@ -252,14 +298,25 @@
       gap: 0.5rem;
     }
 
-    .entry .actions button.edit {
+    .entry .actions button.edit.sent {
       background-color: white;
       color: var(--text-color);
       border: 2px solid var(--primary-color);
     }
 
-    .entry .actions button.edit:active {
+    .entry .actions button.edit.received {
+      background-color: white;
+      color: var(--text-color);
+      border: 2px solid var(--secondary-color);
+    }
+
+    .entry .actions button.edit.sent:active {
       background-color: var(--primary-color);
+      color: white;
+    }
+
+    .entry .actions button.edit.received:active {
+      background-color: var(--secondary-color);
       color: white;
     }
 
@@ -272,6 +329,14 @@
       height: 16px;
     }
 
+    .entry .related-entries {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-color);
+      opacity: 0.7;
+      word-break: break-word;
+    }
+
     .filter {
       margin: 1.5rem 0;
       padding: 1rem;
@@ -280,8 +345,25 @@
       box-shadow: var(--shadow);
     }
 
+    .filter label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
     .filter input {
-      margin: 0.5rem 0;
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .filter input:focus {
+      outline: none;
+      border-color: var(--primary-color);
     }
 
     @media (max-width: 480px) {
@@ -318,10 +400,26 @@
   <div id="formArea" style="display:none;">
     <h2 id="formTitle"></h2>
     <input type="hidden" id="editingId">
-    <input type="text" id="partner" placeholder="相手の名前">
-    <input type="text" id="title" placeholder="品名やカテゴリ">
-    <input type="date" id="date">
-    <textarea id="content" placeholder="贈り物の詳細やメモ"></textarea>
+    
+    <div class="form-group">
+      <label for="partner">相手の名前</label>
+      <input type="text" id="partner" placeholder="例：ユイ">
+    </div>
+
+    <div class="form-group">
+      <label for="title">品名やカテゴリ</label>
+      <input type="text" id="title" placeholder="例：お土産、誕生日プレゼント、お祝いの花束">
+    </div>
+
+    <div class="form-group">
+      <label for="date">日付</label>
+      <input type="date" id="date">
+    </div>
+
+    <div class="form-group">
+      <label for="content">詳細なメモ</label>
+      <textarea id="content" placeholder="例：手作りしたクッキーをプレゼント。喜んでくれて嬉しかった。"></textarea>
+    </div>
     
     <div class="related-gifts">
       <h3>関連する贈り物</h3>
@@ -332,7 +430,8 @@
   </div>
 
   <div class="filter">
-    相手別で絞り込み：<input type="text" id="filter" oninput="renderEntries()">
+    <label for="filter">相手別で絞り込み</label>
+    <input type="text" id="filter" oninput="renderEntries()" placeholder="例：ユイ">
   </div>
 
   <div id="entryList"></div>
@@ -343,8 +442,10 @@
 
     function showForm(selected, entry = null) {
       mode = selected;
+      const formArea = document.getElementById("formArea");
+      formArea.style.display = "block";
+      formArea.className = selected === "sent" ? "" : "received-mode";
       document.getElementById("formTitle").textContent = selected === "sent" ? "贈った記録" : "もらった記録";
-      document.getElementById("formArea").style.display = "block";
       if (entry) {
         document.getElementById("editingId").value = entry.id;
         document.getElementById("partner").value = entry.partner;
@@ -380,7 +481,7 @@
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .forEach(e => {
           const div = document.createElement("div");
-          div.className = `related-gift-item ${selectedRelatedEntries.has(e.id) ? 'selected' : ''}`;
+          div.className = `related-gift-item ${selectedRelatedEntries.has(e.id) ? 'selected' : ''} ${e.type}`;
           div.onclick = () => toggleRelatedEntry(e.id);
 
           const typeIndicator = document.createElement("div");
@@ -495,7 +596,10 @@
 
           const contentSpan = document.createElement("span");
           contentSpan.className = "description";
-          contentSpan.textContent = e.content;
+          contentSpan.innerHTML = e.content.replace(
+            /(https?:\/\/[^\s]+)/g,
+            '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+          );
           contentDiv.appendChild(contentSpan);
 
           // 関連する贈り物の表示
@@ -521,7 +625,7 @@
           actionsDiv.className = "actions";
 
           const editBtn = document.createElement("button");
-          editBtn.className = "edit";
+          editBtn.className = `edit ${e.type}`;
           editBtn.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
