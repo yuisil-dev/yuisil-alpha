@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ユイシル α</title>
+  <style>
+    :root {
+      --primary-color: #faa987;
+      --secondary-color: #7fc8d6;
+      --background-color: #f9f6f2;
+      --text-color: #333;
+      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    header img {
+      height: 80px;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0.5rem 0;
+      color: var(--text-color);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+      box-shadow: var(--shadow);
+    }
+
+    button:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    button#receivedBtn {
+      background-color: var(--secondary-color);
+    }
+
+    #formArea {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      border: 2px solid #eee;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .entry {
+      background: white;
+      margin: 1rem 0;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      position: relative;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .entry .type-indicator {
+      width: 8px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .entry .type-indicator.sent {
+      background-color: var(--primary-color);
+    }
+
+    .entry .type-indicator.received {
+      background-color: var(--secondary-color);
+    }
+
+    .entry .type-label {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .entry .content {
+      flex: 1;
+    }
+
+    .entry .content span {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .entry .content span:first-child {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .entry .actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+    }
+
+    .entry .actions button {
+      flex: 1;
+      font-size: 0.9rem;
+      padding: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .entry .actions button.edit {
+      background-color: white;
+      color: var(--text-color);
+      border: 2px solid var(--primary-color);
+    }
+
+    .entry .actions button.edit:active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .entry .actions button.delete {
+      background-color: #ff6b6b;
+    }
+
+    .entry .actions button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .filter {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter input {
+      margin: 0.5rem 0;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .entry .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="yuisil_logo.png" alt="ユイシル ロゴ">
+    <h1>ユイシル α</h1>
+  </header>
+
+  <div class="button-group">
+    <button onclick="showForm('sent')">贈った</button>
+    <button id="receivedBtn" onclick="showForm('received')">もらった</button>
+  </div>
+
+  <div id="formArea" style="display:none;">
+    <h2 id="formTitle"></h2>
+    <input type="hidden" id="editingId">
+    <input type="text" id="partner" placeholder="相手の名前">
+    <input type="date" id="date">
+    <textarea id="content" placeholder="贈り物や内容のメモ"></textarea>
+    <button onclick="saveEntry()">保存</button>
+  </div>
+
+  <div class="filter">
+    相手別で絞り込み：<input type="text" id="filter" oninput="renderEntries()">
+  </div>
+
+  <div id="entryList"></div>
+
+  <script>
+    let mode = "sent";
+
+    function showForm(selected, entry = null) {
+      mode = selected;
+      document.getElementById("formTitle").textContent = selected === "sent" ? "贈った記録" : "もらった記録";
+      document.getElementById("formArea").style.display = "block";
+      if (entry) {
+        document.getElementById("editingId").value = entry.id;
+        document.getElementById("partner").value = entry.partner;
+        document.getElementById("date").value = entry.date;
+        document.getElementById("content").value = entry.content;
+        mode = entry.type;
+      } else {
+        document.getElementById("editingId").value = "";
+        document.getElementById("partner").value = "";
+        document.getElementById("date").value = "";
+        document.getElementById("content").value = "";
+      }
+    }
+
+    function saveEntry() {
+      const editingId = document.getElementById("editingId").value;
+      const partner = document.getElementById("partner").value.trim();
+      const date = document.getElementById("date").value;
+      const content = document.getElementById("content").value.trim();
+      if (!partner || !date || !content) return alert("すべて入力してください");
+      let entries = JSON.parse(localStorage.getItem("yuisilEntries") || "[]");
+      if (editingId) {
+        entries = entries.map(e => e.id == editingId ? { ...e, partner, date, content, type: mode } : e);
+      } else {
+        entries.push({ id: Date.now(), type: mode, partner, date, content });
+      }
+      localStorage.setItem("yuisilEntries", JSON.stringify(entries));
+      document.getElementById("formArea").style.display = "none";
+      renderEntries();
+    }
+
+    function deleteEntry(id) {
+      if (!confirm("削除してもよいですか？")) return;
+      let entries = JSON.parse(localStorage.getItem("yuisilEntries") || "[]");
+      entries = entries.filter(e => e.id != id);
+      localStorage.setItem("yuisilEntries", JSON.stringify(entries));
+      renderEntries();
+    }
+
+    function renderEntries() {
+      const entries = JSON.parse(localStorage.getItem("yuisilEntries") || "[]");
+      const filter = document.getElementById("filter").value.trim();
+      const list = document.getElementById("entryList");
+      list.innerHTML = "";
+      entries
+        .filter(e => !filter || e.partner.includes(filter))
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .forEach(e => {
+          const div = document.createElement("div");
+          div.className = "entry";
+
+          const typeIndicator = document.createElement("div");
+          typeIndicator.className = `type-indicator ${e.type}`;
+          div.appendChild(typeIndicator);
+
+          const typeLabel = document.createElement("div");
+          typeLabel.className = "type-label";
+          typeLabel.textContent = e.type === 'sent' ? '贈った' : 'もらった';
+          div.appendChild(typeLabel);
+
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "content";
+
+          const partnerSpan = document.createElement("span");
+          partnerSpan.textContent = e.partner;
+          contentDiv.appendChild(partnerSpan);
+
+          const dateSpan = document.createElement("span");
+          dateSpan.textContent = `日付：${e.date}`;
+          contentDiv.appendChild(dateSpan);
+
+          const contentSpan = document.createElement("span");
+          contentSpan.textContent = `内容：${e.content}`;
+          contentDiv.appendChild(contentSpan);
+
+          div.appendChild(contentDiv);
+
+          const actionsDiv = document.createElement("div");
+          actionsDiv.className = "actions";
+
+          const editBtn = document.createElement("button");
+          editBtn.className = "edit";
+          editBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            編集
+          `;
+          editBtn.onclick = () => showForm(e.type, e);
+          actionsDiv.appendChild(editBtn);
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.className = "delete";
+          deleteBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            削除
+          `;
+          deleteBtn.onclick = () => deleteEntry(e.id);
+          actionsDiv.appendChild(deleteBtn);
+
+          div.appendChild(actionsDiv);
+
+          list.appendChild(div);
+        });
+    }
+
+    renderEntries();
+  </script>
+</body>
+</html>
