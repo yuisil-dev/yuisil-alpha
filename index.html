@@ -85,6 +85,70 @@
       box-shadow: var(--shadow);
     }
 
+    .related-gifts {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .related-gifts h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      color: var(--text-color);
+    }
+
+    .related-gifts-list {
+      max-height: 200px;
+      overflow-y: auto;
+      margin: 0.5rem 0;
+    }
+
+    .related-gift-item {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin: 0.25rem 0;
+      background: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .related-gift-item:hover {
+      background: #e9ecef;
+    }
+
+    .related-gift-item.selected {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .related-gift-item .type-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .related-gift-item .type-indicator.sent {
+      background-color: var(--primary-color);
+    }
+
+    .related-gift-item .type-indicator.received {
+      background-color: var(--secondary-color);
+    }
+
+    .related-gift-item .content {
+      flex: 1;
+      font-size: 0.9rem;
+    }
+
+    .related-gift-item .date {
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
     input, textarea {
       width: 100%;
       padding: 0.75rem;
@@ -238,6 +302,12 @@
     <input type="text" id="partner" placeholder="相手の名前">
     <input type="date" id="date">
     <textarea id="content" placeholder="贈り物や内容のメモ"></textarea>
+    
+    <div class="related-gifts">
+      <h3>関連する贈り物</h3>
+      <div class="related-gifts-list" id="relatedGiftsList"></div>
+    </div>
+
     <button onclick="saveEntry()">保存</button>
   </div>
 
@@ -249,6 +319,7 @@
 
   <script>
     let mode = "sent";
+    let selectedRelatedEntries = new Set();
 
     function showForm(selected, entry = null) {
       mode = selected;
@@ -260,12 +331,57 @@
         document.getElementById("date").value = entry.date;
         document.getElementById("content").value = entry.content;
         mode = entry.type;
+        selectedRelatedEntries = new Set(entry.relatedEntries || []);
       } else {
         document.getElementById("editingId").value = "";
         document.getElementById("partner").value = "";
         document.getElementById("date").value = "";
         document.getElementById("content").value = "";
+        selectedRelatedEntries.clear();
       }
+      updateRelatedGiftsList();
+    }
+
+    function updateRelatedGiftsList() {
+      const list = document.getElementById("relatedGiftsList");
+      list.innerHTML = "";
+      const entries = JSON.parse(localStorage.getItem("yuisilEntries") || "[]");
+      const partner = document.getElementById("partner").value.trim();
+      
+      // 同じ相手の記録を表示
+      entries
+        .filter(e => e.partner === partner && e.id !== document.getElementById("editingId").value)
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .forEach(e => {
+          const div = document.createElement("div");
+          div.className = `related-gift-item ${selectedRelatedEntries.has(e.id) ? 'selected' : ''}`;
+          div.onclick = () => toggleRelatedEntry(e.id);
+
+          const typeIndicator = document.createElement("div");
+          typeIndicator.className = `type-indicator ${e.type}`;
+          div.appendChild(typeIndicator);
+
+          const content = document.createElement("div");
+          content.className = "content";
+          content.textContent = e.content;
+          div.appendChild(content);
+
+          const date = document.createElement("div");
+          date.className = "date";
+          date.textContent = e.date;
+          div.appendChild(date);
+
+          list.appendChild(div);
+        });
+    }
+
+    function toggleRelatedEntry(id) {
+      if (selectedRelatedEntries.has(id)) {
+        selectedRelatedEntries.delete(id);
+      } else {
+        selectedRelatedEntries.add(id);
+      }
+      updateRelatedGiftsList();
     }
 
     function saveEntry() {
@@ -274,12 +390,34 @@
       const date = document.getElementById("date").value;
       const content = document.getElementById("content").value.trim();
       if (!partner || !date || !content) return alert("すべて入力してください");
+      
       let entries = JSON.parse(localStorage.getItem("yuisilEntries") || "[]");
+      const newEntry = {
+        id: editingId ? parseInt(editingId) : Date.now(),
+        type: mode,
+        partner,
+        date,
+        content,
+        relatedEntries: Array.from(selectedRelatedEntries)
+      };
+
       if (editingId) {
-        entries = entries.map(e => e.id == editingId ? { ...e, partner, date, content, type: mode } : e);
+        entries = entries.map(e => e.id == editingId ? newEntry : e);
       } else {
-        entries.push({ id: Date.now(), type: mode, partner, date, content });
+        entries.push(newEntry);
       }
+
+      // 関連する記録も更新
+      entries = entries.map(e => {
+        if (selectedRelatedEntries.has(e.id)) {
+          return {
+            ...e,
+            relatedEntries: [...(e.relatedEntries || []), newEntry.id]
+          };
+        }
+        return e;
+      });
+
       localStorage.setItem("yuisilEntries", JSON.stringify(entries));
       document.getElementById("formArea").style.display = "none";
       renderEntries();
@@ -329,6 +467,23 @@
           contentSpan.textContent = `内容：${e.content}`;
           contentDiv.appendChild(contentSpan);
 
+          // 関連する贈り物の表示
+          if (e.relatedEntries && e.relatedEntries.length > 0) {
+            const relatedDiv = document.createElement("div");
+            relatedDiv.className = "related-entries";
+            relatedDiv.style.marginTop = "0.5rem";
+            relatedDiv.style.fontSize = "0.9rem";
+            relatedDiv.style.color = "var(--text-color)";
+            relatedDiv.style.opacity = "0.7";
+            
+            const relatedEntries = entries.filter(r => e.relatedEntries.includes(r.id));
+            relatedDiv.textContent = `関連：${relatedEntries.map(r => 
+              `${r.type === 'sent' ? '贈った' : 'もらった'} (${r.date})`
+            ).join(', ')}`;
+            
+            contentDiv.appendChild(relatedDiv);
+          }
+
           div.appendChild(contentDiv);
 
           const actionsDiv = document.createElement("div");
@@ -363,6 +518,9 @@
           list.appendChild(div);
         });
     }
+
+    // 相手の名前が変更されたときに関連する贈り物のリストを更新
+    document.getElementById("partner").addEventListener("input", updateRelatedGiftsList);
 
     renderEntries();
   </script>
