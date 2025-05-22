@@ -122,9 +122,14 @@ function renderEntries() {
       typeIndicator.className = `type-indicator ${e.type}`;
       div.appendChild(typeIndicator);
 
+      const dateLabel = document.createElement("div");
+      dateLabel.className = "date-label";
+      dateLabel.textContent = `${e.date}`;
+      div.appendChild(dateLabel);
+
       const typeLabel = document.createElement("div");
       typeLabel.className = "type-label";
-      typeLabel.textContent = `${e.partner}さん に${e.type === 'sent' ? '贈った' : 'もらった'}`;
+      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'へ贈った' : 'からもらった'}`;
       div.appendChild(typeLabel);
 
       const contentDiv = document.createElement("div");
@@ -134,11 +139,6 @@ function renderEntries() {
       titleSpan.className = "title";
       titleSpan.textContent = e.title;
       contentDiv.appendChild(titleSpan);
-
-      const dateSpan = document.createElement("span");
-      dateSpan.className = "date";
-      dateSpan.textContent = e.date;
-      contentDiv.appendChild(dateSpan);
 
       const contentWrapper = document.createElement("div");
       contentWrapper.className = "content-wrapper";
