@@ -27,6 +27,14 @@ function showForm(selected, entry = null) {
     selectedRelatedEntries.clear();
   }
   updateRelatedGiftsList();
+
+  // フォームエリアまでスクロール
+  document.getElementById("formArea").scrollIntoView({ behavior: 'smooth' });
+
+  // 編集モードの場合、最初の入力フィールドにフォーカス
+  if (entry) {
+    document.getElementById("partner").focus();
+  }
 }
 
 function updateRelatedGiftsList() {
