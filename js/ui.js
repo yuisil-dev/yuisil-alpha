@@ -8,7 +8,7 @@ function showForm(selected, entry = null) {
   const formArea = document.getElementById("formArea");
   formArea.style.display = "block";
   formArea.className = selected === "sent" ? "" : "received-mode";
-  document.getElementById("formTitle").textContent = selected === "sent" ? "贈った記録" : "もらった記録";
+  document.getElementById("formTitle").textContent = selected === "sent" ? "贈った記録" : "受け取った記録";
   
   if (entry) {
     document.getElementById("editingId").value = entry.id;
@@ -172,7 +172,7 @@ function renderEntries() {
       // パートナー名・タイプ情報表示（タイトルの上）
       const typeLabel = document.createElement("div");
       typeLabel.className = "type-label";
-      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'に贈った' : 'にもらった'}`;
+      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'に贈った' : 'に受け取った'}`;
       contentDiv.appendChild(typeLabel);
 
       const titleSpan = document.createElement("span");
