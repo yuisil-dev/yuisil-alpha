@@ -122,23 +122,30 @@ function renderEntries() {
       typeIndicator.className = `type-indicator ${e.type}`;
       div.appendChild(typeIndicator);
 
-      const typeLabel = document.createElement("div");
-      typeLabel.className = "type-label";
-      typeLabel.textContent = `${e.partner}さん に${e.type === 'sent' ? '贈った' : 'もらった'}`;
-      div.appendChild(typeLabel);
+      // 日付表示（右上）
+      const dateLabel = document.createElement("div");
+      dateLabel.className = "date-label";
+      const formattedDate = new Date(e.date).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      dateLabel.textContent = `${formattedDate}`;
+      div.appendChild(dateLabel);
 
       const contentDiv = document.createElement("div");
       contentDiv.className = "content";
+
+      // パートナー名・タイプ情報表示（タイトルの上）
+      const typeLabel = document.createElement("div");
+      typeLabel.className = "type-label";
+      typeLabel.textContent = `${e.partner}さん ${e.type === 'sent' ? 'に贈った' : 'にもらった'}`;
+      contentDiv.appendChild(typeLabel);
 
       const titleSpan = document.createElement("span");
       titleSpan.className = "title";
       titleSpan.textContent = e.title;
       contentDiv.appendChild(titleSpan);
-
-      const dateSpan = document.createElement("span");
-      dateSpan.className = "date";
-      dateSpan.textContent = e.date;
-      contentDiv.appendChild(dateSpan);
 
       const contentWrapper = document.createElement("div");
       contentWrapper.className = "content-wrapper";

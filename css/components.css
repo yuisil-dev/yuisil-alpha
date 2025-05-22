@@ -98,28 +98,39 @@ button#receivedBtn {
   background-color: var(--secondary-color);
 }
 
-.entry .type-label {
+.entry .date-label {
   position: absolute;
   top: 1rem;
-  right: 1rem;
+  right: 1.5rem;
   font-size: 0.9rem;
   font-weight: bold;
   color: var(--text-color);
   opacity: 0.7;
+  z-index: 1;
 }
 
 .entry .content {
   flex: 1;
   min-width: 0;
   position: relative;
+  padding-right: 0rem;
+}
+
+.entry .content .type-label {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  margin-bottom: 0rem;
+  display: block;
 }
 
 .entry .content .title {
   font-weight: bold;
   font-size: 1.1rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
   color: var(--text-color);
   display: block;
+  word-break: break-word;
 }
 
 .entry .content .partner {
@@ -128,16 +139,8 @@ button#receivedBtn {
   opacity: 0.8;
 }
 
-.entry .content .date {
-  font-size: 0.9rem;
-  color: var(--text-color);
-  opacity: 0.7;
-  display: block;
-  margin-bottom: 0.75rem;
-}
-
 .entry .content .description {
-  margin-top: 0.5rem;
+  margin-top: 0rem;
   font-size: 0.95rem;
   color: var(--text-color);
   word-break: break-word;
@@ -212,8 +215,7 @@ button#receivedBtn {
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid #eee;
-  position: sticky;
-  bottom: 0;
+  position: relative;
   background: white;
   z-index: 1;
 }
@@ -260,11 +262,13 @@ button#receivedBtn {
 }
 
 .entry .related-entries {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   font-size: 0.9rem;
   color: var(--text-color);
   opacity: 0.7;
   word-break: break-word;
+  border-top: 1px solid #eee;
+  padding-top: 0;
 }
 
 /* Related Gifts */
@@ -330,11 +334,6 @@ button#receivedBtn {
 .related-gift-item .content {
   flex: 1;
   font-size: 0.9rem;
-}
-
-.related-gift-item .date {
-  font-size: 0.8rem;
-  opacity: 0.7;
 }
 
 /* Filter */
