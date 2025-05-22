@@ -67,4 +67,17 @@ h1 {
 
 .feedback-button:hover {
   opacity: 0.9;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.copyright {
+    margin: 0;
 } 
