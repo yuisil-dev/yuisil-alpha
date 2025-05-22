@@ -209,10 +209,29 @@
       margin-bottom: 0.5rem;
     }
 
-    .entry .content span:first-child {
+    .entry .content .title {
       font-weight: bold;
       font-size: 1.1rem;
       margin-bottom: 0.75rem;
+      color: var(--text-color);
+    }
+
+    .entry .content .partner {
+      font-size: 0.9rem;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+
+    .entry .content .date {
+      font-size: 0.9rem;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .entry .content .description {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--text-color);
     }
 
     .entry .actions {
@@ -300,8 +319,9 @@
     <h2 id="formTitle"></h2>
     <input type="hidden" id="editingId">
     <input type="text" id="partner" placeholder="相手の名前">
+    <input type="text" id="title" placeholder="品名やカテゴリ">
     <input type="date" id="date">
-    <textarea id="content" placeholder="贈り物や内容のメモ"></textarea>
+    <textarea id="content" placeholder="贈り物の詳細やメモ"></textarea>
     
     <div class="related-gifts">
       <h3>関連する贈り物</h3>
@@ -328,6 +348,7 @@
       if (entry) {
         document.getElementById("editingId").value = entry.id;
         document.getElementById("partner").value = entry.partner;
+        document.getElementById("title").value = entry.title || "";
         document.getElementById("date").value = entry.date;
         document.getElementById("content").value = entry.content;
         mode = entry.type;
@@ -335,6 +356,7 @@
       } else {
         document.getElementById("editingId").value = "";
         document.getElementById("partner").value = "";
+        document.getElementById("title").value = "";
         document.getElementById("date").value = "";
         document.getElementById("content").value = "";
         selectedRelatedEntries.clear();
@@ -348,9 +370,13 @@
       const entries = JSON.parse(localStorage.getItem("yuisilEntries") || "[]");
       const partner = document.getElementById("partner").value.trim();
       
-      // 同じ相手の記録を表示
+      // 同じ相手の、反対のタイプの記録のみを表示
       entries
-        .filter(e => e.partner === partner && e.id !== document.getElementById("editingId").value)
+        .filter(e => 
+          e.partner === partner && 
+          e.id !== document.getElementById("editingId").value &&
+          e.type !== mode // 反対のタイプのみ
+        )
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .forEach(e => {
           const div = document.createElement("div");
@@ -387,15 +413,17 @@
     function saveEntry() {
       const editingId = document.getElementById("editingId").value;
       const partner = document.getElementById("partner").value.trim();
+      const title = document.getElementById("title").value.trim();
       const date = document.getElementById("date").value;
       const content = document.getElementById("content").value.trim();
-      if (!partner || !date || !content) return alert("すべて入力してください");
+      if (!partner || !title || !date || !content) return alert("すべて入力してください");
       
       let entries = JSON.parse(localStorage.getItem("yuisilEntries") || "[]");
       const newEntry = {
         id: editingId ? parseInt(editingId) : Date.now(),
         type: mode,
         partner,
+        title,
         date,
         content,
         relatedEntries: Array.from(selectedRelatedEntries)
@@ -449,22 +477,25 @@
 
           const typeLabel = document.createElement("div");
           typeLabel.className = "type-label";
-          typeLabel.textContent = e.type === 'sent' ? '贈った' : 'もらった';
+          typeLabel.textContent = `${e.partner}さん に${e.type === 'sent' ? '贈った' : 'もらった'}`;
           div.appendChild(typeLabel);
 
           const contentDiv = document.createElement("div");
           contentDiv.className = "content";
 
-          const partnerSpan = document.createElement("span");
-          partnerSpan.textContent = e.partner;
-          contentDiv.appendChild(partnerSpan);
+          const titleSpan = document.createElement("span");
+          titleSpan.className = "title";
+          titleSpan.textContent = e.title;
+          contentDiv.appendChild(titleSpan);
 
           const dateSpan = document.createElement("span");
-          dateSpan.textContent = `日付：${e.date}`;
+          dateSpan.className = "date";
+          dateSpan.textContent = e.date;
           contentDiv.appendChild(dateSpan);
 
           const contentSpan = document.createElement("span");
-          contentSpan.textContent = `内容：${e.content}`;
+          contentSpan.className = "description";
+          contentSpan.textContent = e.content;
           contentDiv.appendChild(contentSpan);
 
           // 関連する贈り物の表示
@@ -477,9 +508,9 @@
             relatedDiv.style.opacity = "0.7";
             
             const relatedEntries = entries.filter(r => e.relatedEntries.includes(r.id));
-            relatedDiv.textContent = `関連：${relatedEntries.map(r => 
-              `${r.type === 'sent' ? '贈った' : 'もらった'} (${r.date})`
-            ).join(', ')}`;
+            relatedDiv.innerHTML = `関連：<br>${relatedEntries.map(r => 
+              `${r.date} - ${r.title}(${r.content})`
+            ).join('<br>')}`;
             
             contentDiv.appendChild(relatedDiv);
           }
