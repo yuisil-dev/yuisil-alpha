@@ -140,29 +140,55 @@ function renderEntries() {
       dateSpan.textContent = e.date;
       contentDiv.appendChild(dateSpan);
 
+      const contentWrapper = document.createElement("div");
+      contentWrapper.className = "content-wrapper";
+
       const contentSpan = document.createElement("span");
       contentSpan.className = "description";
       contentSpan.innerHTML = e.content.replace(
         /(https?:\/\/[^\s]+)/g,
         '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
       );
-      contentDiv.appendChild(contentSpan);
+      contentWrapper.appendChild(contentSpan);
 
       if (e.relatedEntries && e.relatedEntries.length > 0) {
         const relatedDiv = document.createElement("div");
         relatedDiv.className = "related-entries";
-        relatedDiv.style.marginTop = "0.5rem";
-        relatedDiv.style.fontSize = "0.9rem";
-        relatedDiv.style.color = "var(--text-color)";
-        relatedDiv.style.opacity = "0.7";
-        
         const relatedEntries = entries.filter(r => e.relatedEntries.includes(r.id));
         relatedDiv.innerHTML = `関連：<br>${relatedEntries.map(r => 
           `${r.date} - ${r.title}(${r.content})`
         ).join('<br>')}`;
-        
-        contentDiv.appendChild(relatedDiv);
+        contentWrapper.appendChild(relatedDiv);
       }
+
+      contentDiv.appendChild(contentWrapper);
+
+      // コンテンツの長さをチェックして、必要な場合のみボタンを表示
+      setTimeout(() => {
+        if (contentWrapper.scrollHeight > 100) {
+          const toggleButton = document.createElement("button");
+          toggleButton.className = "toggle-description";
+          toggleButton.innerHTML = `
+            もっと見る
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          `;
+          toggleButton.onclick = () => {
+            contentWrapper.classList.toggle('expanded');
+            toggleButton.innerHTML = contentWrapper.classList.contains('expanded') ? 
+              `閉じる
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>` :
+              `もっと見る
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>`;
+          };
+          contentDiv.appendChild(toggleButton);
+        }
+      }, 0);
 
       div.appendChild(contentDiv);
 
