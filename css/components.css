@@ -1,0 +1,322 @@
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+  box-shadow: var(--shadow);
+}
+
+button:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+button#receivedBtn {
+  background-color: var(--secondary-color);
+}
+
+/* Form Area */
+#formArea {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+#formArea.received-mode button {
+  background-color: var(--secondary-color);
+}
+
+#formArea.received-mode input:focus, 
+#formArea.received-mode textarea:focus {
+  border-color: var(--secondary-color);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* Entry Card */
+.entry {
+  background: white;
+  margin: 1rem 0;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.entry .type-indicator {
+  width: 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.entry .type-indicator.sent {
+  background-color: var(--primary-color);
+}
+
+.entry .type-indicator.received {
+  background-color: var(--secondary-color);
+}
+
+.entry .type-label {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.entry .content {
+  flex: 1;
+  min-width: 0;
+}
+
+.entry .content .title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+  display: block;
+}
+
+.entry .content .partner {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.entry .content .date {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.entry .content .description {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  display: block;
+  white-space: pre-wrap;
+}
+
+.entry .actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  z-index: 1;
+}
+
+.entry .actions button {
+  flex: 1;
+  font-size: 0.9rem;
+  padding: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.entry .actions button.edit.sent {
+  background-color: white;
+  color: var(--text-color);
+  border: 2px solid var(--primary-color);
+}
+
+.entry .actions button.edit.received {
+  background-color: white;
+  color: var(--text-color);
+  border: 2px solid var(--secondary-color);
+}
+
+.entry .actions button.edit.sent:active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.entry .actions button.edit.received:active {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.entry .actions button.delete {
+  background-color: #ff6b6b;
+}
+
+.entry .actions button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.entry .related-entries {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  word-break: break-word;
+}
+
+/* Related Gifts */
+.related-gifts {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.related-gifts h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.related-gifts-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0.5rem 0;
+}
+
+.related-gift-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.related-gift-item:hover {
+  background: #e9ecef;
+}
+
+.related-gift-item.selected.sent {
+  background: var(--primary-color);
+  color: white;
+}
+
+.related-gift-item.selected.received {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.related-gift-item .type-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.related-gift-item .type-indicator.sent {
+  background-color: var(--primary-color);
+}
+
+.related-gift-item .type-indicator.received {
+  background-color: var(--secondary-color);
+}
+
+.related-gift-item .content {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.related-gift-item .date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Filter */
+.filter {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.filter label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.filter input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.filter input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+@media (max-width: 480px) {
+  .button-group {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .entry .actions {
+    flex-direction: column;
+  }
+} 
