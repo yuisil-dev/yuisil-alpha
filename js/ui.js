@@ -91,15 +91,23 @@ function toggleRelatedEntry(id) {
 
 function saveEntry() {
   const editingId = document.getElementById("editingId").value;
-  const partner = document.getElementById("partner").value.trim();
-  const title = document.getElementById("title").value.trim();
+  let partner = document.getElementById("partner").value.trim();
+  let title = document.getElementById("title").value.trim();
   const date = document.getElementById("date").value;
   const content = document.getElementById("content").value.trim();
-  
+
   if (!partner || !title || !date || !content) {
     return alert("すべて入力してください");
   }
-  
+
+  // 相手の名前と品名に文字数制限を適用 (100文字)
+  if (partner.length > 100) {
+    partner = partner.substring(0, 100);
+  }
+  if (title.length > 100) {
+    title = title.substring(0, 100);
+  }
+
   const newEntry = {
     id: editingId ? parseInt(editingId) : Date.now(),
     type: mode,
@@ -118,6 +126,16 @@ function saveEntry() {
 
   document.getElementById("formArea").style.display = "none";
   renderEntries();
+}
+
+// HTML特殊文字をエスケープする関数
+function escapeHtml(unsafe) {
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 function renderEntries() {
@@ -167,10 +185,31 @@ function renderEntries() {
 
       const contentSpan = document.createElement("span");
       contentSpan.className = "description";
-      contentSpan.innerHTML = e.content.replace(
-        /(https?:\/\/[^\s]+)/g,
-        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-      );
+
+      // コンテンツ内のURLのみをリンク化し、それ以外の部分をエスケープする
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      let lastIndex = 0;
+      let htmlParts = [];
+
+      e.content.replace(urlRegex, (match, offset) => {
+          // URL前のテキスト部分をエスケープして追加
+          const textBeforeUrl = e.content.substring(lastIndex, offset);
+          htmlParts.push(escapeHtml(textBeforeUrl));
+
+          // URL部分をリンクとして追加 (URL自体はエスケープしない)
+          htmlParts.push(`<a href="${match}" target="_blank" rel="noopener noreferrer">${match}</a>`);
+
+          lastIndex = offset + match.length;
+          return match; // replaceメソッドの仕様上必要
+      });
+
+      // 最後のURL以降のテキスト部分をエスケープして追加
+      const textAfterLastUrl = e.content.substring(lastIndex);
+      htmlParts.push(escapeHtml(textAfterLastUrl));
+
+      // 全てを結合してinnerHTMLに設定
+      contentSpan.innerHTML = htmlParts.join('');
+
       contentWrapper.appendChild(contentSpan);
 
       if (e.relatedEntries && e.relatedEntries.length > 0) {
