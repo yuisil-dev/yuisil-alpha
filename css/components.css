@@ -165,8 +165,12 @@ button#receivedBtn {
   height: 40px;
   background: linear-gradient(transparent, white);
   pointer-events: none;
-  opacity: 1;
+  opacity: 0;
   transition: opacity 0.3s ease-out;
+}
+
+.entry .content .content-wrapper:not(.expanded):has(+ .toggle-description)::after {
+  opacity: 1;
 }
 
 .entry .content .content-wrapper.expanded::after {
