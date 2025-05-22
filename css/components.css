@@ -113,7 +113,7 @@ button#receivedBtn {
   flex: 1;
   min-width: 0;
   position: relative;
-  padding-right: 8rem;
+  padding-right: 0rem;
 }
 
 .entry .content .type-label {
