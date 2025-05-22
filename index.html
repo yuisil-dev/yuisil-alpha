@@ -85,6 +85,23 @@
       box-shadow: var(--shadow);
     }
 
+    #formArea.received-mode button {
+      background-color: var(--secondary-color);
+    }
+
+    #formArea.received-mode input:focus, 
+    #formArea.received-mode textarea:focus {
+      border-color: var(--secondary-color);
+    }
+
+    .entry.received {
+      border-left: 4px solid var(--secondary-color);
+    }
+
+    .entry.sent {
+      border-left: 4px solid var(--primary-color);
+    }
+
     .related-gifts {
       margin: 1rem 0;
       padding: 1rem;
@@ -119,8 +136,13 @@
       background: #e9ecef;
     }
 
-    .related-gift-item.selected {
+    .related-gift-item.selected.sent {
       background: var(--primary-color);
+      color: white;
+    }
+
+    .related-gift-item.selected.received {
+      background: var(--secondary-color);
       color: white;
     }
 
@@ -252,14 +274,25 @@
       gap: 0.5rem;
     }
 
-    .entry .actions button.edit {
+    .entry .actions button.edit.sent {
       background-color: white;
       color: var(--text-color);
       border: 2px solid var(--primary-color);
     }
 
-    .entry .actions button.edit:active {
+    .entry .actions button.edit.received {
+      background-color: white;
+      color: var(--text-color);
+      border: 2px solid var(--secondary-color);
+    }
+
+    .entry .actions button.edit.sent:active {
       background-color: var(--primary-color);
+      color: white;
+    }
+
+    .entry .actions button.edit.received:active {
+      background-color: var(--secondary-color);
       color: white;
     }
 
@@ -343,8 +376,10 @@
 
     function showForm(selected, entry = null) {
       mode = selected;
+      const formArea = document.getElementById("formArea");
+      formArea.style.display = "block";
+      formArea.className = selected === "sent" ? "" : "received-mode";
       document.getElementById("formTitle").textContent = selected === "sent" ? "贈った記録" : "もらった記録";
-      document.getElementById("formArea").style.display = "block";
       if (entry) {
         document.getElementById("editingId").value = entry.id;
         document.getElementById("partner").value = entry.partner;
@@ -380,7 +415,7 @@
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .forEach(e => {
           const div = document.createElement("div");
-          div.className = `related-gift-item ${selectedRelatedEntries.has(e.id) ? 'selected' : ''}`;
+          div.className = `related-gift-item ${selectedRelatedEntries.has(e.id) ? 'selected' : ''} ${e.type}`;
           div.onclick = () => toggleRelatedEntry(e.id);
 
           const typeIndicator = document.createElement("div");
@@ -521,7 +556,7 @@
           actionsDiv.className = "actions";
 
           const editBtn = document.createElement("button");
-          editBtn.className = "edit";
+          editBtn.className = `edit ${e.type}`;
           editBtn.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
