@@ -22,7 +22,14 @@ function showForm(selected, entry = null) {
     document.getElementById("editingId").value = "";
     document.getElementById("partner").value = "";
     document.getElementById("title").value = "";
-    document.getElementById("date").value = "";
+    
+    // 今日の日付を初期値として設定
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // getMonth()は0から始まるため+1
+    const dd = String(today.getDate()).padStart(2, '0');
+    document.getElementById("date").value = `${yyyy}-${mm}-${dd}`;
+
     document.getElementById("content").value = "";
     selectedRelatedEntries.clear();
   }
