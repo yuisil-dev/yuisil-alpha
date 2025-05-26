@@ -1,5 +1,6 @@
 import { getEntries, addEntry, updateEntry, deleteEntry } from './storage.js';
 
+/** @type {'sent' | 'received'} */
 let mode = "sent";
 let selectedRelatedEntries = new Set();
 
@@ -39,11 +40,16 @@ const randomThoughts = {
 };
 
 function showForm(selected, entry = null) {
-  mode = selected;
+  // 編集時はentry.typeを優先、それ以外はselectedの値を使用
+  mode = entry?.type || selected;
   const formArea = document.getElementById("formArea");
+  const formTitle = document.getElementById("formTitle");
+  const receivedBtn = document.getElementById("receivedBtn");
+  
   formArea.style.display = "block";
-  formArea.className = selected === "sent" ? "" : "received-mode";
-  document.getElementById("formTitle").textContent = selected === "sent" ? "贈った記録" : "受け取った記録";
+  formArea.className = mode === "sent" ? "" : "received-mode";
+  formTitle.textContent = mode === "sent" ? "贈った記録" : "受け取った記録";
+  receivedBtn.style.display = mode === "sent" ? "block" : "none";
   
   if (entry) {
     document.getElementById("editingId").value = entry.id;
@@ -51,7 +57,6 @@ function showForm(selected, entry = null) {
     document.getElementById("title").value = entry.title || "";
     document.getElementById("date").value = entry.date;
     document.getElementById("content").value = entry.content;
-    mode = entry.type;
     selectedRelatedEntries = new Set(entry.relatedEntries || []);
   } else {
     document.getElementById("editingId").value = "";
@@ -77,6 +82,9 @@ function showForm(selected, entry = null) {
   if (entry) {
     document.getElementById("partner").focus();
   }
+
+  // Track form display
+  trackUIClick(mode === 'sent' ? 'send_button' : 'receive_button', mode, 'button');
 }
 
 function updateRelatedGiftsList() {
@@ -94,11 +102,9 @@ function updateRelatedGiftsList() {
   if (relatedEntries.length === 0) {
     const emptyMessage = document.createElement("div");
     emptyMessage.className = "empty-message";
-    if (mode === 'sent') {
-      emptyMessage.textContent = "同じ相手から受け取った贈り物（お返し）を関連付けられます";
-    } else {
-      emptyMessage.textContent = "同じ相手に贈った贈り物（お返し）を関連付けられます";
-    }
+    emptyMessage.textContent = mode === 'sent' 
+      ? "同じ相手から受け取った贈り物（お返し）を関連付けられます"
+      : "同じ相手に贈った贈り物（お返し）を関連付けられます";
     list.appendChild(emptyMessage);
     return;
   }
@@ -177,6 +183,9 @@ function saveEntry() {
   if (!editingId) {
     showShareModal(newEntry);
   }
+
+  // Track save action
+  trackUIClick('save_button', mode, 'button');
 }
 
 // HTML特殊文字をエスケープする関数
@@ -521,6 +530,41 @@ document.addEventListener('DOMContentLoaded', () => {
   if (regenerateThoughtBtn) {
     regenerateThoughtBtn.addEventListener('click', regenerateRandomThought);
   }
+});
+
+// Add tracking to toggle switches
+document.getElementById('nameToggle').addEventListener('change', function() {
+  trackUIClick('name_toggle', currentShareEntry?.type || null, 'checkbox');
+  updateShareText();
+});
+
+document.getElementById('contentToggle').addEventListener('change', function() {
+  trackUIClick('content_toggle', currentShareEntry?.type || null, 'checkbox');
+  updateShareText();
+});
+
+// Add tracking to share buttons
+document.getElementById('copyShareTextBtn').addEventListener('click', function() {
+  trackUIClick('copy_share', currentShareEntry?.type || null, 'button');
+  copyShareText();
+});
+
+document.getElementById('regenerateThoughtBtn').addEventListener('click', function() {
+  trackUIClick('regenerate_thought', currentShareEntry?.type || null, 'button');
+  regenerateThought();
+});
+
+// Add tracking to social share buttons
+document.getElementById('twitterShareBtn').addEventListener('click', function() {
+  trackUIClick('twitter_share', currentShareEntry?.type || null, 'button');
+});
+
+document.getElementById('facebookShareBtn').addEventListener('click', function() {
+  trackUIClick('facebook_share', currentShareEntry?.type || null, 'button');
+});
+
+document.getElementById('lineShareBtn').addEventListener('click', function() {
+  trackUIClick('line_share', currentShareEntry?.type || null, 'button');
 });
 
 export {
