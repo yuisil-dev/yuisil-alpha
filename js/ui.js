@@ -129,6 +129,11 @@ function saveEntry() {
 
   document.getElementById("formArea").style.display = "none";
   renderEntries();
+  
+  // 新規作成時のみシェアモーダルを表示
+  if (!editingId) {
+    showShareModal(newEntry);
+  }
 }
 
 // HTML特殊文字をエスケープする関数
@@ -259,13 +264,6 @@ function renderEntries() {
     .forEach(e => {
       const div = document.createElement("div");
       div.className = "entry";
-
-      // シェアボタンを追加
-      const shareButton = document.createElement("button");
-      shareButton.className = "entry-share";
-      shareButton.innerHTML = '<i class="fas fa-share-alt"></i>';
-      shareButton.onclick = () => showShareModal(e);
-      div.appendChild(shareButton);
 
       const typeIndicator = document.createElement("div");
       typeIndicator.className = `type-indicator ${e.type}`;
