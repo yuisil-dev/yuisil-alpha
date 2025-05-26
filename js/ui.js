@@ -44,12 +44,10 @@ function showForm(selected, entry = null) {
   mode = entry?.type || selected;
   const formArea = document.getElementById("formArea");
   const formTitle = document.getElementById("formTitle");
-  const receivedBtn = document.getElementById("receivedBtn");
   
   formArea.style.display = "block";
   formArea.className = mode === "sent" ? "" : "received-mode";
   formTitle.textContent = mode === "sent" ? "贈った記録" : "受け取った記録";
-  receivedBtn.style.display = mode === "sent" ? "block" : "none";
   
   if (entry) {
     document.getElementById("editingId").value = entry.id;
