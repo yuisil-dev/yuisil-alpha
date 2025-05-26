@@ -30,8 +30,8 @@
     <input type="hidden" id="editingId">
     
     <div class="form-group">
-      <label for="partner">相手の名前</label>
-      <input type="text" id="partner" placeholder="例：ユイシル">
+      <label for="partner">相手の名前・関係性</label>
+      <input type="text" id="partner" placeholder="例：ユイシル、父親、母親、恋人">
     </div>
 
     <div class="form-group">
@@ -59,7 +59,7 @@
 
   <div class="filter">
     <label for="filter">相手別で絞り込み</label>
-    <input type="text" id="filter" oninput="renderEntries()" placeholder="例：ユイシル">
+    <input type="text" id="filter" oninput="renderEntries()" placeholder="例：ユイシル、父親、母親、恋人">
   </div>
 
   <div id="entryList"></div>
@@ -70,15 +70,10 @@
   <div id="shareModal" class="modal" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>記録、残せました ✨</h2>
+        <h2>記録、残しました ✨</h2>
       </div>
-      <p class="share-description">よければ、感謝の気持ちを誰かと分かち合ってみませんか？</p>
+      <p class="share-description">感謝の記録をそっとシェアしてみませんか？そのやさしい気持ちは、きっと誰かの心にも届きます。</p>
       
-      <p class="share-sub-description">
-        贈った・もらったエピソードは、きっと誰かの心にも響きます。<br>
-        SNSにシェアして、やさしい気持ちのリレーをつなぎましょう 🧵
-      </p>
-
       <div class="share-text-area">
         <div class="share-text-container">
           <textarea id="shareText" rows="6"></textarea>
