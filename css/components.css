@@ -291,6 +291,16 @@ button#receivedBtn {
   margin: 0.5rem 0;
 }
 
+.empty-message {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  background: white;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+}
+
 .related-gift-item {
   display: flex;
   align-items: center;
