@@ -5,6 +5,10 @@ let selectedRelatedEntries = new Set();
 
 // シェア機能の実装
 let currentShareEntry = null;
+let lastShareSettings = {
+  showName: true,
+  showContent: true
+};
 
 function showForm(selected, entry = null) {
   mode = selected;
@@ -180,12 +184,12 @@ function showShareModal(entry) {
   const nameToggle = document.getElementById('nameToggle');
   const contentToggle = document.getElementById('contentToggle');
   
-  // トグルをデフォルトでONに設定
-  nameToggle.checked = true;
-  contentToggle.checked = true;
+  // 前回の設定を反映
+  nameToggle.checked = lastShareSettings.showName;
+  contentToggle.checked = lastShareSettings.showContent;
   
   // シェアテキストを生成して設定
-  shareText.value = generateShareText(entry, true, true);
+  shareText.value = generateShareText(entry, lastShareSettings.showName, lastShareSettings.showContent);
   
   // シェアボタンのURLを設定
   const encodedText = encodeURIComponent(shareText.value);
@@ -220,16 +224,6 @@ function closeShareModal() {
   modal.style.display = 'none';
   currentShareEntry = null;
   
-  // トグルをリセット
-  const nameToggle = document.getElementById('nameToggle');
-  const contentToggle = document.getElementById('contentToggle');
-  if (nameToggle) {
-    nameToggle.checked = true;
-  }
-  if (contentToggle) {
-    contentToggle.checked = true;
-  }
-
   // ESCキーのイベントリスナーを削除
   document.removeEventListener('keydown', handleEscKey);
   
@@ -241,6 +235,11 @@ function toggleNameDisplay() {
   if (!currentShareEntry) return;
   const showName = document.getElementById('nameToggle').checked;
   const showContent = document.getElementById('contentToggle').checked;
+  
+  // 設定を保存
+  lastShareSettings.showName = showName;
+  lastShareSettings.showContent = showContent;
+  
   const shareText = document.getElementById('shareText');
   shareText.value = generateShareText(currentShareEntry, showName, showContent);
   
