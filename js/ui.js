@@ -85,34 +85,45 @@ function updateRelatedGiftsList() {
   const entries = getEntries();
   const partner = document.getElementById("partner").value.trim();
   
-  entries
-    .filter(e => 
-      e.partner === partner && 
-      e.id !== document.getElementById("editingId").value &&
-      e.type !== mode
-    )
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .forEach(e => {
-      const div = document.createElement("div");
-      div.className = `related-gift-item ${selectedRelatedEntries.has(e.id) ? 'selected' : ''} ${e.type}`;
-      div.onclick = () => toggleRelatedEntry(e.id);
+  const relatedEntries = entries.filter(e => 
+    e.partner === partner && 
+    e.id !== document.getElementById("editingId").value &&
+    e.type !== mode
+  ).sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      const typeIndicator = document.createElement("div");
-      typeIndicator.className = `type-indicator ${e.type}`;
-      div.appendChild(typeIndicator);
+  if (relatedEntries.length === 0) {
+    const emptyMessage = document.createElement("div");
+    emptyMessage.className = "empty-message";
+    if (mode === 'sent') {
+      emptyMessage.textContent = "同じ相手から受け取った贈り物（お返し）を関連付けられます";
+    } else {
+      emptyMessage.textContent = "同じ相手に贈った贈り物（お返し）を関連付けられます";
+    }
+    list.appendChild(emptyMessage);
+    return;
+  }
 
-      const content = document.createElement("div");
-      content.className = "content";
-      content.textContent = e.content;
-      div.appendChild(content);
+  relatedEntries.forEach(e => {
+    const div = document.createElement("div");
+    div.className = `related-gift-item ${selectedRelatedEntries.has(e.id) ? 'selected' : ''} ${e.type}`;
+    div.onclick = () => toggleRelatedEntry(e.id);
 
-      const date = document.createElement("div");
-      date.className = "date";
-      date.textContent = e.date;
-      div.appendChild(date);
+    const typeIndicator = document.createElement("div");
+    typeIndicator.className = `type-indicator ${e.type}`;
+    div.appendChild(typeIndicator);
 
-      list.appendChild(div);
-    });
+    const content = document.createElement("div");
+    content.className = "content";
+    content.textContent = e.content;
+    div.appendChild(content);
+
+    const date = document.createElement("div");
+    date.className = "date";
+    date.textContent = e.date;
+    div.appendChild(date);
+
+    list.appendChild(div);
+  });
 }
 
 function toggleRelatedEntry(id) {
