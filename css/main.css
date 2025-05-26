@@ -175,25 +175,32 @@ h1 {
 
 .share-text-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
+  margin-top: 8px;
   justify-content: flex-end;
 }
 
 .text-action-button {
-  background: none;
-  border: none;
-  color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: white;
+  color: var(--text-color);
   font-size: 0.9rem;
   cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  transition: color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .text-action-button:hover {
-  color: var(--primary-color-dark);
+  background: var(--hover-color);
+  border-color: var(--primary-color);
+}
+
+.text-action-button i {
+  font-size: 0.9rem;
 }
 
 .share-buttons {

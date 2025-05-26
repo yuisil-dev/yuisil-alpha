@@ -10,6 +10,34 @@ let lastShareSettings = {
   showContent: true
 };
 
+// ランダム感想文のデータ
+const randomThoughts = {
+  sent: [
+    "喜んでもらえたみたいで、私もうれしかった。",
+    "相手の笑顔を思い浮かべながら選びました。",
+    "これが少しでも力になればと思って。",
+    "以前から贈りたいと思っていたものです。",
+    "気持ちが伝わるといいなと思って渡しました。",
+    "心を込めて選びました。",
+    "どんなふうに使ってくれるか、想像するのも楽しいです。",
+    "贈る側の私も、あたたかい気持ちになりました。",
+    "渡したときの表情が忘れられません。",
+    "喜んで受け取ってもらえて、ほんとうによかった。"
+  ],
+  received: [
+    "思いがけないタイミングで、心がほぐれました。",
+    "大切にしようと思える贈りものです。",
+    "やさしさがまっすぐ伝わってきました。",
+    "温かい気持ちになりました。今でもふと思い出します。",
+    "自分を気にかけてくれる人がいることに、改めて感謝。",
+    "贈りものって、ほんとうに人を元気にするものですね。",
+    "言葉にしきれないくらい嬉しかったです。",
+    "普段は言えない「ありがとう」を、ちゃんと伝えたくなりました。",
+    "これを見るたびに、その時の気持ちがよみがえります。",
+    "気持ちのこもった贈り物に、心からありがとうを伝えたい。"
+  ]
+};
+
 function showForm(selected, entry = null) {
   mode = selected;
   const formArea = document.getElementById("formArea");
@@ -166,15 +194,25 @@ function generateShareText(entry, showName = true, showContent = true) {
     text += `💐 ${nameText}${entry.title}をいただきました。`;
   }
   
+  // ランダム感想文を追加
+  if (entry.randomThought) {
+    text += `\n${entry.randomThought}`;
+  }
+
   // メモがある場合は追加
   if (showContent && entry.content) {
     text += `\n${entry.content}`;
   }
-  
+
   // 共通のフッター部分
   text += `\n\nユイシルで記録しています。\n📖紹介記事：${articleUrl}\n🔗アプリ：${baseUrl}\n#ユイシル #ありがとうの記録`;
   
   return text;
+}
+
+function getRandomThought(type) {
+  const thoughts = randomThoughts[type];
+  return thoughts[Math.floor(Math.random() * thoughts.length)];
 }
 
 function showShareModal(entry) {
@@ -187,6 +225,11 @@ function showShareModal(entry) {
   // 前回の設定を反映
   nameToggle.checked = lastShareSettings.showName;
   contentToggle.checked = lastShareSettings.showContent;
+  
+  // ランダム感想文を生成
+  if (!entry.randomThought) {
+    entry.randomThought = getRandomThought(entry.type);
+  }
   
   // シェアテキストを生成して設定
   shareText.value = generateShareText(entry, lastShareSettings.showName, lastShareSettings.showContent);
@@ -415,6 +458,24 @@ function renderEntries() {
     });
 }
 
+function regenerateRandomThought() {
+  if (!currentShareEntry) return;
+  
+  currentShareEntry.randomThought = getRandomThought(currentShareEntry.type);
+  const shareText = document.getElementById('shareText');
+  shareText.value = generateShareText(
+    currentShareEntry,
+    document.getElementById('nameToggle').checked,
+    document.getElementById('contentToggle').checked
+  );
+  
+  // シェアボタンのURLを更新
+  const encodedText = encodeURIComponent(shareText.value);
+  document.getElementById('twitterShareBtn').href = `https://twitter.com/intent/tweet?text=${encodedText}`;
+  document.getElementById('facebookShareBtn').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodedText}`;
+  document.getElementById('lineShareBtn').href = `https://line.me/R/share?text=${encodedText}`;
+}
+
 // イベントリスナーの設定
 document.getElementById("partner").addEventListener("input", updateRelatedGiftsList);
 
@@ -442,6 +503,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const copyShareTextBtn = document.getElementById('copyShareTextBtn');
   if (copyShareTextBtn) {
     copyShareTextBtn.addEventListener('click', copyShareText);
+  }
+
+  // ランダム感想文再生成ボタン
+  const regenerateThoughtBtn = document.getElementById('regenerateThoughtBtn');
+  if (regenerateThoughtBtn) {
+    regenerateThoughtBtn.addEventListener('click', regenerateRandomThought);
   }
 });
 
