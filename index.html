@@ -66,6 +66,63 @@
 
   <script type="module" src="js/app.js"></script>
 
+  <!-- シェアモーダル -->
+  <div id="shareModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>記録、残せました ✨</h2>
+      </div>
+      <p class="share-description">よければ、感謝の気持ちを誰かと分かち合ってみませんか？</p>
+      
+      <p class="share-sub-description">
+        贈った・もらったエピソードは、きっと誰かの心にも響きます。<br>
+        SNSにシェアして、やさしい気持ちのリレーをつなぎましょう 🧵
+      </p>
+
+      <div class="share-text-area">
+        <div class="share-text-header">
+          <label class="toggle-switch">
+            <input type="checkbox" id="nameToggle">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">名前を表示する</span>
+          </label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="contentToggle">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">メモを表示する</span>
+          </label>
+        </div>
+        <textarea id="shareText" rows="6"></textarea>
+        <div class="share-text-actions">
+          <button type="button" id="copyShareTextBtn" class="text-action-button">
+            <i class="fas fa-copy"></i> コピー
+          </button>
+        </div>
+      </div>
+
+      <div class="share-buttons">
+        <a id="twitterShareBtn" class="share-button twitter" target="_blank" rel="noopener noreferrer">
+          <i class="fa-brands fa-x"></i> Xでシェア
+        </a>
+        <a id="facebookShareBtn" class="share-button facebook" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-facebook"></i> Facebookでシェア
+        </a>
+        <a id="lineShareBtn" class="share-button line" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-line"></i> LINEでシェア
+        </a>
+      </div>
+
+      <div class="share-feedback">
+        <p>ユイシルの使い心地、どうでしたか？</p>
+        <a href="https://forms.gle/1ontRjM3WK32XnDv6" target="_blank" rel="noopener noreferrer" class="feedback-link">
+          ひとことフィードバックもお待ちしています
+        </a>
+      </div>
+
+      <button type="button" class="close-button" id="modalBottomCloseBtn">閉じる</button>
+    </div>
+  </div>
+
   <!-- フローティングフィードバックボタン -->
   <a href="https://forms.gle/1ontRjM3WK32XnDv6" class="feedback-button" target="_blank" rel="noopener noreferrer">
     <i class="fas fa-comment-dots"></i> フィードバック

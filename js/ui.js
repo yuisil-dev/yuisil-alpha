@@ -3,6 +3,9 @@ import { getEntries, addEntry, updateEntry, deleteEntry } from './storage.js';
 let mode = "sent";
 let selectedRelatedEntries = new Set();
 
+// シェア機能の実装
+let currentShareEntry = null;
+
 function showForm(selected, entry = null) {
   mode = selected;
   const formArea = document.getElementById("formArea");
@@ -26,7 +29,7 @@ function showForm(selected, entry = null) {
     // 今日の日付を初期値として設定
     const today = new Date();
     const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // getMonth()は0から始まるため+1
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     document.getElementById("date").value = `${yyyy}-${mm}-${dd}`;
 
@@ -130,12 +133,118 @@ function saveEntry() {
 
 // HTML特殊文字をエスケープする関数
 function escapeHtml(unsafe) {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function generateShareText(entry, showName = true, showContent = true) {
+  const baseUrl = 'https://yuisil-alpha.vercel.app/';
+  const hashtag = '#ユイシル 記録🧾';
+  
+  if (entry.type === 'sent') {
+    const nameText = showName ? `${entry.partner}さんに` : '誰かに';
+    const contentText = showContent ? `\n${entry.content}` : '';
+    return `【${hashtag}】\n\n🎁${nameText}${entry.title}を贈りました。${contentText}\n\n感謝の気持ちは、ちゃんと記録しておくとまた温かくなれる。\n${baseUrl}`;
+  } else {
+    const nameText = showName ? `${entry.partner}さんから` : '誰かから';
+    const contentText = showContent ? `\n${entry.content}` : '';
+    return `【${hashtag}】\n\n💐${nameText}${entry.title}をもらいました。${contentText}\n\n気持ちの履歴帳、使ってます。\n${baseUrl}`;
+  }
+}
+
+function showShareModal(entry) {
+  currentShareEntry = entry;
+  const modal = document.getElementById('shareModal');
+  const shareText = document.getElementById('shareText');
+  const nameToggle = document.getElementById('nameToggle');
+  const contentToggle = document.getElementById('contentToggle');
+  
+  // トグルをデフォルトでONに設定
+  nameToggle.checked = true;
+  contentToggle.checked = true;
+  
+  // シェアテキストを生成して設定
+  shareText.value = generateShareText(entry, true, true);
+  
+  // シェアボタンのURLを設定
+  const encodedText = encodeURIComponent(shareText.value);
+  document.getElementById('twitterShareBtn').href = `https://twitter.com/intent/tweet?text=${encodedText}`;
+  document.getElementById('facebookShareBtn').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodedText}`;
+  document.getElementById('lineShareBtn').href = `https://line.me/R/share?text=${encodedText}`;
+  
+  // モーダルを表示
+  modal.style.display = 'flex';
+  
+  // モーダルの外側クリックで閉じる
+  modal.onclick = (event) => {
+    if (event.target === modal) {
+      closeShareModal();
+    }
+  };
+
+  // ESCキーで閉じる
+  document.addEventListener('keydown', handleEscKey);
+}
+
+function handleEscKey(event) {
+  if (event.key === 'Escape') {
+    closeShareModal();
+  }
+}
+
+function closeShareModal() {
+  const modal = document.getElementById('shareModal');
+  if (!modal) return;
+  
+  modal.style.display = 'none';
+  currentShareEntry = null;
+  
+  // トグルをリセット
+  const nameToggle = document.getElementById('nameToggle');
+  const contentToggle = document.getElementById('contentToggle');
+  if (nameToggle) {
+    nameToggle.checked = true;
+  }
+  if (contentToggle) {
+    contentToggle.checked = true;
+  }
+
+  // ESCキーのイベントリスナーを削除
+  document.removeEventListener('keydown', handleEscKey);
+  
+  // モーダルの外側クリックイベントを削除
+  modal.onclick = null;
+}
+
+function toggleNameDisplay() {
+  if (!currentShareEntry) return;
+  const showName = document.getElementById('nameToggle').checked;
+  const showContent = document.getElementById('contentToggle').checked;
+  const shareText = document.getElementById('shareText');
+  shareText.value = generateShareText(currentShareEntry, showName, showContent);
+  
+  // シェアボタンのURLを更新
+  const encodedText = encodeURIComponent(shareText.value);
+  document.getElementById('twitterShareBtn').href = `https://twitter.com/intent/tweet?text=${encodedText}`;
+  document.getElementById('facebookShareBtn').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodedText}`;
+  document.getElementById('lineShareBtn').href = `https://line.me/R/share?text=${encodedText}`;
+}
+
+function copyShareText() {
+  const shareText = document.getElementById('shareText');
+  shareText.select();
+  
+  try {
+    document.execCommand('copy');
+    alert('テキストをコピーしました');
+  } catch (err) {
+    console.error('クリップボードへのコピーに失敗しました:', err);
+    alert('テキストのコピーに失敗しました');
+  }
 }
 
 function renderEntries() {
@@ -150,6 +259,13 @@ function renderEntries() {
     .forEach(e => {
       const div = document.createElement("div");
       div.className = "entry";
+
+      // シェアボタンを追加
+      const shareButton = document.createElement("button");
+      shareButton.className = "entry-share";
+      shareButton.innerHTML = '<i class="fas fa-share-alt"></i>';
+      shareButton.onclick = () => showShareModal(e);
+      div.appendChild(shareButton);
 
       const typeIndicator = document.createElement("div");
       typeIndicator.className = `type-indicator ${e.type}`;
@@ -192,15 +308,15 @@ function renderEntries() {
       let htmlParts = [];
 
       e.content.replace(urlRegex, (match, offset) => {
-          // URL前のテキスト部分をエスケープして追加
-          const textBeforeUrl = e.content.substring(lastIndex, offset);
-          htmlParts.push(escapeHtml(textBeforeUrl));
+        // URL前のテキスト部分をエスケープして追加
+        const textBeforeUrl = e.content.substring(lastIndex, offset);
+        htmlParts.push(escapeHtml(textBeforeUrl));
 
-          // URL部分をリンクとして追加 (URL自体はエスケープしない)
-          htmlParts.push(`<a href="${match}" target="_blank" rel="noopener noreferrer">${match}</a>`);
+        // URL部分をリンクとして追加 (URL自体はエスケープしない)
+        htmlParts.push(`<a href="${match}" target="_blank" rel="noopener noreferrer">${match}</a>`);
 
-          lastIndex = offset + match.length;
-          return match; // replaceメソッドの仕様上必要
+        lastIndex = offset + match.length;
+        return match; // replaceメソッドの仕様上必要
       });
 
       // 最後のURL以降のテキスト部分をエスケープして追加
@@ -293,8 +409,36 @@ function renderEntries() {
 // イベントリスナーの設定
 document.getElementById("partner").addEventListener("input", updateRelatedGiftsList);
 
+// モーダル関連のイベントリスナー
+document.addEventListener('DOMContentLoaded', () => {
+  // 下部の閉じるボタン
+  const modalBottomCloseBtn = document.getElementById('modalBottomCloseBtn');
+  if (modalBottomCloseBtn) {
+    modalBottomCloseBtn.addEventListener('click', closeShareModal);
+  }
+
+  // 名前表示トグル
+  const nameToggle = document.getElementById('nameToggle');
+  if (nameToggle) {
+    nameToggle.addEventListener('change', toggleNameDisplay);
+  }
+
+  // コンテンツ表示トグル
+  const contentToggle = document.getElementById('contentToggle');
+  if (contentToggle) {
+    contentToggle.addEventListener('change', toggleNameDisplay);
+  }
+
+  // コピーボタン
+  const copyShareTextBtn = document.getElementById('copyShareTextBtn');
+  if (copyShareTextBtn) {
+    copyShareTextBtn.addEventListener('click', copyShareText);
+  }
+});
+
 export {
   showForm,
   saveEntry,
-  renderEntries
-}; 
+  renderEntries,
+  closeShareModal
+};
