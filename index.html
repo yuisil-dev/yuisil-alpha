@@ -80,30 +80,36 @@
       </p>
 
       <div class="share-text-area">
-        <div class="share-text-header">
-          <label class="toggle-switch">
-            <input type="checkbox" id="nameToggle">
-            <span class="toggle-slider"></span>
-            <span class="toggle-label">名前を表示する</span>
-          </label>
-          <label class="toggle-switch">
-            <input type="checkbox" id="contentToggle">
-            <span class="toggle-slider"></span>
-            <span class="toggle-label">メモを表示する</span>
-          </label>
-        </div>
-        <textarea id="shareText" rows="6"></textarea>
-        <div class="share-text-actions">
-          <button type="button" id="regenerateThoughtBtn" class="text-action-button">
-            <i class="fas fa-sync-alt"></i> 作り直す
-          </button>
-          <button type="button" id="copyShareTextBtn" class="text-action-button">
-            <i class="fas fa-copy"></i> コピー
-          </button>
+        <div class="share-text-container">
+          <textarea id="shareText" rows="6"></textarea>
+          <div class="share-text-controls">
+            <div class="toggle-group">
+              <div class="toggle-switch">
+                <span class="toggle-label">名前を表示</span>
+                <label>
+                  <input type="checkbox" id="nameToggle">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-switch">
+                <span class="toggle-label">メモを表示</span>
+                <label>
+                  <input type="checkbox" id="contentToggle">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <button type="button" id="regenerateThoughtBtn" class="control-button">
+              <i class="fas fa-sync-alt"></i> もう一回つくる
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="share-buttons">
+        <button type="button" id="copyShareTextBtn" class="share-button copy">
+          <i class="fas fa-copy"></i> コピー
+        </button>
         <a id="twitterShareBtn" class="share-button twitter" target="_blank" rel="noopener noreferrer">
           <i class="fa-brands fa-x"></i> Xでシェア
         </a>
