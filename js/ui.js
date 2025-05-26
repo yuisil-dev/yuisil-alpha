@@ -148,17 +148,29 @@ function escapeHtml(unsafe) {
 
 function generateShareText(entry, showName = true, showContent = true) {
   const baseUrl = 'https://yuisil-alpha.vercel.app/';
-  const hashtag = '#ユイシル 記録🧾';
+  const articleUrl = 'https://note.com/yuisil_team/n/n123456789abc';
   
+  // 基本構文の開始部分
+  let text = ``;
+  
+  // カテゴリに応じた絵文字と本文
   if (entry.type === 'sent') {
-    const nameText = showName ? `${entry.partner}さんに` : '誰かに';
-    const contentText = showContent ? `\n${entry.content}` : '';
-    return `【${hashtag}】\n\n🎁${nameText}${entry.title}を贈りました。${contentText}\n\n感謝の気持ちは、ちゃんと記録しておくとまた温かくなれる。\n${baseUrl}`;
+    const nameText = showName ? `${entry.partner}さんに` : '';
+    text += `🎁 ${nameText}${entry.title}を贈りました。`;
   } else {
-    const nameText = showName ? `${entry.partner}さんから` : '誰かから';
-    const contentText = showContent ? `\n${entry.content}` : '';
-    return `【${hashtag}】\n\n💐${nameText}${entry.title}をもらいました。${contentText}\n\n気持ちの履歴帳、使ってます。\n${baseUrl}`;
+    const nameText = showName ? `${entry.partner}さんから` : '';
+    text += `💐 ${nameText}${entry.title}をいただきました。`;
   }
+  
+  // メモがある場合は追加
+  if (showContent && entry.content) {
+    text += `\n${entry.content}`;
+  }
+  
+  // 共通のフッター部分
+  text += `\n\nユイシルで記録しています。\n📖紹介記事：${articleUrl}\n🔗アプリ：${baseUrl}\n#ユイシル #ありがとうの記録`;
+  
+  return text;
 }
 
 function showShareModal(entry) {
