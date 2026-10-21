@@ -401,3 +401,40 @@ button#receivedBtn {
     flex-direction: column;
   }
 } 
+
+/* 新しいユイシルへの案内 */
+.new-yuisil-notice {
+  margin: 0 0 1.5rem;
+  padding: 1.25rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 12px;
+  background: #fff7f2;
+  color: var(--text-color);
+}
+
+.new-yuisil-notice h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: #b4532a;
+}
+
+.new-yuisil-notice p {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.new-yuisil-notice .new-yuisil-note {
+  font-size: 0.8rem;
+  color: #6b6b6b;
+}
+
+.new-yuisil-link {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: #4a1f0c;
+  font-weight: bold;
+  text-decoration: none;
+}
